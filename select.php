@@ -10,9 +10,10 @@
   
   <h1>本日のご紹介ペット！</h1>
     <p>
-      <form action="" method="">キーワード:
-      <input type="text" placeholder="キーワードを入力">
-      <input type="submit" value="送信">
+      <form action="" method="get">キーワード:
+        <input type="text"  name="search" placeholder="キーワードを入力" value="<?php echo $search_value ?>">
+        <input type="submit" value="送信">
+      </form>
     </p>
 </body>
 </html>
@@ -35,10 +36,21 @@ $stmt = $dbh->prepare($sql);
 $stmt->execute();
 $animals = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-$sql = "SELECT * from animals WHERE description LIKE '%おっとり%'";
+$sql = "SELECT * from animals WHERE description LIKE '%$search%'";
 $stmt = $dbh->prepare($sql);
 $stmt->execute();
 $animals = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+if (isset($_get['search'])) {
+$search = htmlspecialchars($_get['search']);
+$search = '';
+$search_value = $search;
+}else {
+$search = '';
+$search_value = '';
+}
+
+
 
 foreach ($animals as $animal)
 {
