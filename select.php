@@ -11,24 +11,27 @@ try {
 }
 
 $sql = "select * from animals";
-$stmt = $dbh->prepare($sql);
-$stmt->execute();
-$animals = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 $sql2 = "select * from description like %'$keyword'%";
-$stmt = $dbh->prepare($sql2);
-$stmt->execute();
-
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+  $keyword = $_GET["keyword"];
   $keyword = '%'.$keyword.'%';
 
   if ($keyword == '') {
     echo "$sql";
-    } else ($keyword == 'keyword'){
+    } else ($keyword == 'keyword') {
     echo "$sql2";
     }
 }
+
+$stmt = $dbh->prepare($sql);
+$stmt->execute();
+$animals = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+$stmt = $dbh->prepare($sql2);
+$stmt->execute();
+$animals = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
 
@@ -47,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
   <h1>本日のご紹介ペット！</h1>
     <p>
       <form action="" method="get">キーワード:
-        <input type="text"  name="keyword" placeholder="キーワードを入力" value="<?php echo $keyword ?>">
+        <input type="text"  name="keyword" placeholder="キーワードを入力">
         <input type="submit" value="送信">
     
       </form>
