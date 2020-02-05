@@ -17,17 +17,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
   if ($keyword == '') {
     $sql = "select * from animals";
     $stmt = $dbh->prepare($sql);
-    $stmt->execute();
-    $animals = $stmt->fetchAll(PDO::FETCH_ASSOC);
-  } else 
+  } else {
     $sql2 = "select * from animals where description like :keyword ";
     $stmt = $dbh->prepare($sql2);
     $keyword = '%'.$keyword.'%';
     $stmt->bindParam(':keyword', $keyword);
+  
     $stmt->execute();
     $animals = $stmt->fetchAll(PDO::FETCH_ASSOC);
+  }
 }
-
 ?>
 
 <!DOCTYPE html>
