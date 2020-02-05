@@ -22,10 +22,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $stmt = $dbh->prepare($sql2);
     $keyword = '%'.$keyword.'%';
     $stmt->bindParam(':keyword', $keyword);
-  
-    $stmt->execute();
-    $animals = $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
+  $stmt->execute();
+  $animals = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 ?>
 
