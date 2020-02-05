@@ -10,30 +10,23 @@ try {
   exit;
 }
 
-$sql = "select * from animals";
-
-$sql2 = "select * from description like %'$keyword'%";
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
   $keyword = $_GET["keyword"];
-  $keyword = '%'.$keyword.'%';
 
   if ($keyword == '') {
-    echo "$sql";
-    } else ($keyword == 'keyword') {
-    echo "$sql2";
-    }
+    $sql = "select * from animals";
+    $stmt = $dbh->prepare($sql);
+    $animals = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $stmt->execute();
+  } else 
+    $sql2 = "select * from animals where description like :keyword ";
+    $stmt = $dbh->prepare($sql2);
+    $keyword = '%'.$keyword.'%';
+    $stmt->bindParam(':keyword', $keyword);
+    $animals = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $stmt->execute();
 }
-
-$stmt = $dbh->prepare($sql);
-$stmt->execute();
-$animals = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-$stmt = $dbh->prepare($sql2);
-$stmt->execute();
-$animals = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-
 
 ?>
 
@@ -52,7 +45,6 @@ $animals = $stmt->fetchAll(PDO::FETCH_ASSOC);
       <form action="" method="get">キーワード:
         <input type="text"  name="keyword" placeholder="キーワードを入力">
         <input type="submit" value="送信">
-    
       </form>
     </p>
       <?php
@@ -61,6 +53,5 @@ $animals = $stmt->fetchAll(PDO::FETCH_ASSOC);
           echo $animal['type'] .  ' の ' . $animal['classifcation'] . ' ちゃん ' .' <br> ' . $animal['description'] . ' <br> ' . $animal['birthday'] . ' 生まれ ' . ' <br> ' . ' 出身地 ' . $animal['birthplace'] . ' <hr> ';
         }
       ?>
-
 </body>
 </html>
